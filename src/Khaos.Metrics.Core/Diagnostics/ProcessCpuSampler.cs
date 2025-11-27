@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using Khaos.Time;
 
 namespace Khaos.Metrics;
 
@@ -14,15 +15,17 @@ internal sealed class ProcessCpuSampler : IDisposable
     private readonly CancellationTokenSource? _cts;
     private readonly Task? _worker;
     private readonly object _gate = new();
+    private readonly ISystemClock _clock;
     private int _index;
     private int _count;
     private bool _disposed;
 
-    public ProcessCpuSampler(MonitoringOptions options)
+    public ProcessCpuSampler(MonitoringOptions options, ISystemClock clock)
     {
         _enabled = options.EnableCpuMeasurement;
         _interval = TimeSpan.FromSeconds(Math.Max(1, options.CpuSampleIntervalSeconds));
         _samples = new double[Math.Max(1, options.CpuSampleHistoryCount)];
+        _clock = clock;
 
         if (_enabled)
         {
@@ -54,7 +57,7 @@ internal sealed class ProcessCpuSampler : IDisposable
 
     private async Task RunAsync(CancellationToken token)
     {
-        var lastWall = DateTime.UtcNow;
+        var lastWall = _clock.UtcNow;
         var lastCpu = TimeSpan.Zero;
         var hasBaseline = false;
 
@@ -73,7 +76,7 @@ internal sealed class ProcessCpuSampler : IDisposable
             {
                 using var process = Process.GetCurrentProcess();
                 var currentCpu = process.TotalProcessorTime;
-                var currentWall = DateTime.UtcNow;
+                var currentWall = _clock.UtcNow;
 
                 if (!hasBaseline)
                 {

@@ -1,4 +1,5 @@
 using System;
+using Khaos.Time;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
@@ -21,8 +22,8 @@ public static class ServiceCollectionExtensions
         {
             var options = provider.GetRequiredService<IOptions<MonitoringOptions>>().Value;
             return options.TimeMode == MonitoringTimeMode.Local
-                ? new LocalSystemClock()
-                : new UtcSystemClock();
+            ? LocalSystemClock.Instance
+            : UtcSystemClock.Instance;
         });
 
         services.TryAddSingleton<MonitoringEngine>();
