@@ -1,5 +1,6 @@
 using System;
 using Khaos.Metrics.Core.Tests.Infrastructure;
+using Khaos.Time;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Khaos.Metrics.Core.Tests;

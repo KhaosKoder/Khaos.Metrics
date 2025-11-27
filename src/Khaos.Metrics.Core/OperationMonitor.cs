@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Khaos.Time;
 using Microsoft.Extensions.Options;
 
 namespace Khaos.Metrics;

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Khaos.Time;
 using Microsoft.Extensions.Options;
 
 namespace Khaos.Metrics;
@@ -19,13 +20,18 @@ public sealed class MonitoringEngine : IMonitoringDataSource, IDisposable
     private MonitoringOptions _currentOptions;
     private ProcessCpuSampler? _cpuSampler;
     private bool _disposed;
+    private readonly ISystemClock _clock;
 
-    public MonitoringEngine(IOptionsMonitor<MonitoringOptions> optionsMonitor, IEnumerable<IOperationEventSink> sinks)
+    public MonitoringEngine(
+        IOptionsMonitor<MonitoringOptions> optionsMonitor,
+        IEnumerable<IOperationEventSink> sinks,
+        ISystemClock? clock = null)
     {
         ArgumentNullException.ThrowIfNull(optionsMonitor);
         ArgumentNullException.ThrowIfNull(sinks);
 
         _optionsMonitor = optionsMonitor;
+        _clock = clock ?? SystemClock.Instance;
         _dispatcher = new EventDispatcher(sinks);
         _optionsSubscription = optionsMonitor.OnChange(options => ApplyOptions(CloneOptions(options)))
             ?? throw new InvalidOperationException("Options monitor returned a null subscription.");
@@ -107,7 +113,7 @@ public sealed class MonitoringEngine : IMonitoringDataSource, IDisposable
     private void ConfigureCpuSampler(MonitoringOptions options)
     {
         _cpuSampler?.Dispose();
-        _cpuSampler = options.EnableCpuMeasurement ? new ProcessCpuSampler(options) : null;
+        _cpuSampler = options.EnableCpuMeasurement ? new ProcessCpuSampler(options, _clock) : null;
     }
 
     private void RestartTimers(MonitoringOptions options)
