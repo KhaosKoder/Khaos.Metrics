@@ -1,1 +1,77 @@
-# Versioning Guide## OverviewKhaos.Metrics uses [Semantic Versioning 2.0.0](https://semver.org/) with Git tags as the single source of truth. We do not hard-code version numbers in project files. Instead, [MinVer](https://github.com/adamralph/minver) reads the latest Git tag that matches our product prefix and automatically sets the `Version`, `PackageVersion`, `AssemblyVersion`, and `FileVersion` for every packable project in this solution. Both `Khaos.Metrics.Core` and `Khaos.Metrics.AspNet` always share the exact same version for a given commit.MinVer is configured via `Directory.Build.props` to look for tags that start with `Khaos.Metrics/v`. When you run any build (`dotnet build`, `dotnet pack`, etc.), MinVer determines the version that should be applied.## Semantic Versioning RulesSemantic Versioning follows the `MAJOR.MINOR.PATCH` pattern:- **MAJOR** â€“ increment when breaking changes are introduced. Examples for this solution: removing or renaming public types, changing constructor parameters in a non-backwards-compatible way, altering event payloads in ways that would break consumers.- **MINOR** â€“ increment when backwards-compatible functionality is added. Examples: new metrics APIs, optional parameters on existing methods, additional ASP.NET endpoints or configuration options that do not break existing callers.- **PATCH** â€“ increment for backwards-compatible bug fixes and small internal improvements. Examples: fixing incorrect aggregation math, performance tweaks, documentation-only changes, or refactors that do not affect the public API.## Tagging and ReleasingFollow these steps to cut an official release:1. Ensure the working tree is clean: `git status` should show no pending changes.2. Run the full test suite (and benchmarks if relevant): `dotnet test`.3. Decide the new SemVer number (e.g., `1.2.0`) based on the rules above.4. Create and push a Git tag using the required prefix:   ```bash   git tag Khaos.Metrics/v1.2.0   git push origin Khaos.Metrics/v1.2.0   ```5. Build packages:   ```bash   dotnet pack -c Release   ```6. Verify the generated `.nupkg` files under `*/bin/Release` all share the new version (`1.2.0`).7. Publish the packages with `dotnet nuget push` or your preferred CI workflow (documented separately).## Pre-release and Development BuildsIf you build from a commit that does not have a corresponding release tag, MinVer automatically creates a pre-release version using the `alpha` phase with auto-incremented build numbers (e.g., `1.3.0-alpha.1`, `1.3.0-alpha.2`). These versions are useful for internal testing, nightly feeds, or preview packages. Only push these builds to NuGet if you intend to distribute a preview; otherwise they should remain internal artifacts.## Do's and Don'ts**Do:**- Use Git tags (`Khaos.Metrics/vX.Y.Z`) to change the version.- Follow the SemVer rules when determining MAJOR vs MINOR vs PATCH.- Keep the working tree clean and tests green before tagging.**Don't:**- Manually edit `<Version>`, `<PackageVersion>`, `<AssemblyVersion>`, or `<FileVersion>` in any `.csproj`.- Override MinVer properties to force custom versions for ad-hoc builds.- Leave incorrect tags in historyâ€”fix mistakes by deleting and recreating tags.If you create a wrong tag, delete it locally and remotely, then re-tag:```bashgit tag -d Khaos.Metrics/v1.2.0git push origin :refs/tags/Khaos.Metrics/v1.2.0```Tag again with the correct number.## Cheat Sheet| Change type | Example | Tag || --- | --- | --- || Breaking API change | Removed a public controller action | `git tag Khaos.Metrics/v2.0.0` || New feature | Added optional CPU sampling toggle | `git tag Khaos.Metrics/v1.3.0` || Bug fix | Fixed null reference in event dispatcher | `git tag Khaos.Metrics/v1.2.1` |## Relation to Other LibrariesKhaos.Metrics is part of a broader ecosystem of Khaos libraries, but each repository maintains its own independent versioning stream. Downstream bundles can depend on specific ranges (e.g., `Khaos.Metrics.Core [1.2.0,2.0.0)`) without impacting how this repo tags releases. When coordinating multi-repo releases, tag and publish each solution separately following this guide.
+# Versioning Guide
+
+## Overview
+
+Khaos.Metrics uses [Semantic Versioning 2.0.0](https://semver.org/) with Git tags as the single source of truth. We do not hard-code version numbers in project files. Instead, [MinVer](https://github.com/adamralph/minver) reads the latest Git tag that matches our product prefix and automatically sets the `Version`, `PackageVersion`, `AssemblyVersion`, and `FileVersion` for every packable project in this solution. Both `Khaos.Metrics.Core` and `Khaos.Metrics.AspNet` always share the exact same version for a given commit.
+
+MinVer is configured via `Directory.Build.props` to look for tags that start with `Khaos.Metrics/v`. When you run any build (`dotnet build`, `dotnet pack`, etc.), MinVer determines the version that should be applied.
+
+## Semantic Versioning Rules
+
+Semantic Versioning follows the `MAJOR.MINOR.PATCH` pattern:
+
+- **MAJOR** - increment when breaking changes are introduced. Examples: removing or renaming public types, changing constructor parameters in a non-backwards-compatible way, altering event payloads in ways that would break consumers.
+- **MINOR** - increment when backwards-compatible functionality is added. Examples: new metrics APIs, optional parameters on existing methods, additional ASP.NET endpoints or configuration options that do not break existing callers.
+- **PATCH** - increment for backwards-compatible bug fixes and small internal improvements. Examples: fixing incorrect aggregation math, performance tweaks, documentation-only changes, or refactors that do not affect the public API.
+
+## Tagging and Releasing
+
+Follow these steps to cut an official release:
+
+1. Ensure the working tree is clean: `git status` should show no pending changes.
+2. Run the full test suite (and benchmarks if relevant): `dotnet test`.
+3. Decide the new SemVer number (for example `1.2.0`) based on the rules above.
+4. Create and push a Git tag using the required prefix:
+
+	```bash
+	git tag Khaos.Metrics/v1.2.0
+	git push origin Khaos.Metrics/v1.2.0
+	```
+
+5. Build packages:
+
+	```bash
+	dotnet pack -c Release
+	```
+
+6. Verify the generated `.nupkg` files under `*/bin/Release` all share the new version (`1.2.0`).
+7. Publish the packages with `dotnet nuget push` or your preferred CI workflow (documented separately).
+
+## Pre-release and Development Builds
+
+If you build from a commit that does not have a corresponding release tag, MinVer automatically creates a pre-release version using the `alpha` phase with auto-incremented build numbers (for example `1.3.0-alpha.1`, `1.3.0-alpha.2`). These versions are useful for internal testing, nightly feeds, or preview packages. Only push these builds to NuGet if you intend to distribute a preview; otherwise they should remain internal artifacts.
+
+## Do's and Don'ts
+
+**Do:**
+
+- Use Git tags (`Khaos.Metrics/vX.Y.Z`) to change the version.
+- Follow the SemVer rules when determining MAJOR vs MINOR vs PATCH.
+- Keep the working tree clean and tests green before tagging.
+
+**Don't:**
+
+- Manually edit `<Version>`, `<PackageVersion>`, `<AssemblyVersion>`, or `<FileVersion>` in any `.csproj`.
+- Override MinVer properties to force custom versions for ad-hoc builds.
+- Leave incorrect tags in history; fix mistakes by deleting and recreating tags.
+
+If you create a wrong tag, delete it locally and remotely, then re-tag:
+
+```bash
+git tag -d Khaos.Metrics/v1.2.0
+git push origin :refs/tags/Khaos.Metrics/v1.2.0
+```
+
+Tag again with the correct number.
+
+## Cheat Sheet
+
+| Change type | Example | Tag |
+| --- | --- | --- |
+| Breaking API change | Removed a public controller action | `git tag Khaos.Metrics/v2.0.0` |
+| New feature | Added optional CPU sampling toggle | `git tag Khaos.Metrics/v1.3.0` |
+| Bug fix | Fixed null reference in event dispatcher | `git tag Khaos.Metrics/v1.2.1` |
+
+## Relation to Other Libraries
+
+Khaos.Metrics is part of a broader ecosystem of Khaos libraries, but each repository maintains its own independent versioning stream. Downstream bundles can depend on specific ranges (for example `Khaos.Metrics.Core [1.2.0,2.0.0)`) without impacting how this repo tags releases. When coordinating multi-repo releases, tag and publish each solution separately following this guide.

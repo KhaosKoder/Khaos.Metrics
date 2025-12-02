@@ -1,1 +1,82 @@
-# Build & Test CommandsCopy/paste-ready commands for every recurring workflow. Run everything from the repo root unless stated otherwise.## Restore dependencies```powershelldotnet restore```## Build| Scenario | Command || --- | --- || Build every project (Debug) | `dotnet build` || Build Release binaries | `dotnet build -c Release` || Build only the core library | `dotnet build src/Khaos.Metrics.Core/Khaos.Metrics.Core.csproj` || Build ASP.NET integration | `dotnet build src/Khaos.Metrics.AspNet/Khaos.Metrics.AspNet.csproj` || Publish libraries for deployment | `dotnet publish -c Release src/Khaos.Metrics.Core/Khaos.Metrics.Core.csproj` || Build benchmarks (Release) | `dotnet build -c Release benchmarks/Khaos.Metrics.Benchmarks/Khaos.Metrics.Benchmarks.csproj` |> Front-end assets: not applicable in this repo. If a UI is introduced later, document its npm/yarn build commands here.## Tests & coverage| Task | Command || --- | --- || Run all xUnit tests | `dotnet test` || Run tests with verbose logs | `dotnet test -v n` || Collect code coverage (Cobertura XML) | `dotnet test --collect:"XPlat Code Coverage" --results-directory TestResults` || Generate HTML coverage after collecting | `dotnet tool run reportgenerator -reports:"TestResults/<run-id>/coverage.cobertura.xml" -targetdir:"TestResults/coverage-html" -reporttypes:Html` || Open coverage report (after generation) | `Start-Process TestResults/coverage-html/index.html` || Run tests + coverage + auto-open report | `powershell -ExecutionPolicy Bypass -File scripts/Run-Tests-WithCoverage.ps1 -OpenReport` |## Cleaning artifacts| Task | Command || --- | --- || Dotnet clean (all configurations) | `dotnet clean` || Remove all `bin`/`obj`/`TestResults` folders | `powershell -ExecutionPolicy Bypass -File scripts/Clean-All.ps1` || Manually delete global TestResults | `Remove-Item TestResults -Recurse -Force` |## Benchmarks| Scenario | Command || --- | --- || Run benchmark suite (Release) | `dotnet run -c Release --project benchmarks/Khaos.Metrics.Benchmarks` || Collect BenchmarkDotNet artifacts | Check `benchmarks/Khaos.Metrics.Benchmarks/BenchmarkDotNet.Artifacts` after running |## Diagnostics & utilities| Task | Command || --- | --- || List optional dotnet tools (reportgenerator) | `dotnet tool list` || Update local reportgenerator tool | `dotnet tool update dotnet-reportgenerator-globaltool` || Launch coverage HTML in default browser | `Start-Process .\TestResults\coverage-html\index.html` || Inspect previous coverage runs | `Get-ChildItem TestResults -Directory` |## Suggested workflow snippets1. **Fresh build from scratch**   ```powershell   powershell -ExecutionPolicy Bypass -File scripts/Clean-All.ps1   dotnet restore   dotnet build -c Release   ```2. **Run tests and view coverage**   ```powershell   powershell -ExecutionPolicy Bypass -File scripts/Run-Tests-WithCoverage.ps1 -OpenReport   ```3. **Publish libraries (Release)**   ```powershell   dotnet publish -c Release src/Khaos.Metrics.Core/Khaos.Metrics.Core.csproj   dotnet publish -c Release src/Khaos.Metrics.AspNet/Khaos.Metrics.AspNet.csproj   ```Add future commands (e.g., front-end builds or container packaging) to this file as new components land.
+# Build & Test Commands
+
+Copy/paste-ready commands for recurring workflows. Run everything from the repo root unless stated otherwise.
+
+## Restore Dependencies
+
+```powershell
+dotnet restore
+```
+
+## Build
+
+| Scenario | Command |
+| --- | --- |
+| Build every project (Debug) | `dotnet build` |
+| Build Release binaries | `dotnet build -c Release` |
+| Build only the core library | `dotnet build src/Khaos.Metrics.Core/Khaos.Metrics.Core.csproj` |
+| Build ASP.NET integration | `dotnet build src/Khaos.Metrics.AspNet/Khaos.Metrics.AspNet.csproj` |
+| Publish libraries for deployment | `dotnet publish -c Release src/Khaos.Metrics.Core/Khaos.Metrics.Core.csproj` |
+| Build benchmarks (Release) | `dotnet build -c Release benchmarks/Khaos.Metrics.Benchmarks/Khaos.Metrics.Benchmarks.csproj` |
+
+Front-end assets are not applicable today. If a UI is introduced later, document its npm/yarn build commands here.
+
+## Tests & Coverage
+
+| Task | Command |
+| --- | --- |
+| Run all xUnit tests | `dotnet test` |
+| Run tests with verbose logs | `dotnet test -v n` |
+| Collect code coverage (Cobertura XML) | `dotnet test --collect:"XPlat Code Coverage" --results-directory TestResults` |
+| Generate HTML coverage after collecting | `dotnet tool run reportgenerator -reports:"TestResults/<run-id>/coverage.cobertura.xml" -targetdir:"TestResults/coverage-html" -reporttypes:Html` |
+| Open coverage report (after generation) | `Start-Process TestResults/coverage-html/index.html` |
+| Run tests + coverage + auto-open report | `powershell -ExecutionPolicy Bypass -File scripts/Run-Tests-WithCoverage.ps1 -OpenReport` |
+
+## Cleaning Artifacts
+
+| Task | Command |
+| --- | --- |
+| Dotnet clean (all configurations) | `dotnet clean` |
+| Remove all `bin`/`obj`/`TestResults` folders | `powershell -ExecutionPolicy Bypass -File scripts/Clean-All.ps1` |
+| Manually delete global TestResults | `Remove-Item TestResults -Recurse -Force` |
+
+## Benchmarks
+
+| Scenario | Command |
+| --- | --- |
+| Run benchmark suite (Release) | `dotnet run -c Release --project benchmarks/Khaos.Metrics.Benchmarks` |
+| Collect BenchmarkDotNet artifacts | Check `benchmarks/Khaos.Metrics.Benchmarks/BenchmarkDotNet.Artifacts` after running |
+
+## Diagnostics & Utilities
+
+| Task | Command |
+| --- | --- |
+| List optional dotnet tools (reportgenerator) | `dotnet tool list` |
+| Update local reportgenerator tool | `dotnet tool update dotnet-reportgenerator-globaltool` |
+| Launch coverage HTML in default browser | `Start-Process .\TestResults\coverage-html\index.html` |
+| Inspect previous coverage runs | `Get-ChildItem TestResults -Directory` |
+
+## Suggested Workflow Snippets
+
+1. **Fresh build from scratch**
+
+	```powershell
+	powershell -ExecutionPolicy Bypass -File scripts/Clean-All.ps1
+	dotnet restore
+	dotnet build -c Release
+	```
+
+2. **Run tests and view coverage**
+
+	```powershell
+	powershell -ExecutionPolicy Bypass -File scripts/Run-Tests-WithCoverage.ps1 -OpenReport
+	```
+
+3. **Publish libraries (Release)**
+
+	```powershell
+	dotnet publish -c Release src/Khaos.Metrics.Core/Khaos.Metrics.Core.csproj
+	dotnet publish -c Release src/Khaos.Metrics.AspNet/Khaos.Metrics.AspNet.csproj
+	```
+
+Add future commands (front-end builds, container packaging, etc.) to this file as new components land.
