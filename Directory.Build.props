@@ -1,1 +1,29 @@
-<Project>  <PropertyGroup>    <Company>Khaos</Company>    <Authors>Khaos Team</Authors>    <RepositoryUrl>https://github.com/your-org/Khaos.Metrics</RepositoryUrl>    <RepositoryType>git</RepositoryType>    <PackageProjectUrl>https://github.com/your-org/Khaos.Metrics</PackageProjectUrl>    <PackageLicenseExpression>MIT</PackageLicenseExpression>    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>  </PropertyGroup>  <PropertyGroup Condition="'$(IsPackable)' != 'false'">    <GenerateDocumentationFile>true</GenerateDocumentationFile>    <NoWarn>$(NoWarn);CS1591</NoWarn>  </PropertyGroup>  <PropertyGroup>    <MinVerTagPrefix>Khaos.Metrics/v</MinVerTagPrefix>    <MinVerAutoIncrement>minor</MinVerAutoIncrement>    <MinVerDefaultPreReleaseIdentifiers>alpha.0</MinVerDefaultPreReleaseIdentifiers>  </PropertyGroup>  <ItemGroup>    <PackageReference Include="MinVer" Version="5.*" PrivateAssets="all" />  </ItemGroup></Project>
+<Project>
+
+	<PropertyGroup>
+		<Company>Khaos</Company>
+		<Authors>Khaos Team</Authors>
+		<RepositoryUrl>https://github.com/your-org/Khaos.Metrics</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageProjectUrl>https://github.com/your-org/Khaos.Metrics</PackageProjectUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<KhaosTimePackageVersion Condition="'$(KhaosTimePackageVersion)' == ''">1.0.0</KhaosTimePackageVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(IsPackable)' != 'false'">
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<NoWarn>$(NoWarn);CS1591</NoWarn>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<MinVerTagPrefix>Khaos.Metrics/v</MinVerTagPrefix>
+		<MinVerAutoIncrement>minor</MinVerAutoIncrement>
+		<MinVerDefaultPreReleaseIdentifiers>alpha.0</MinVerDefaultPreReleaseIdentifiers>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="MinVer" Version="5.*" PrivateAssets="all" />
+	</ItemGroup>
+
+</Project>

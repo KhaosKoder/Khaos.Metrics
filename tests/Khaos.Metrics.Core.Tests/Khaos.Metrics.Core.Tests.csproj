@@ -5,6 +5,7 @@
 		<Nullable>enable</Nullable>
 		<IsPackable>false</IsPackable>
 		<IsTestProject>true</IsTestProject>
+		<UseLocalKhaosTime Condition="'$(UseLocalKhaosTime)' == ''">true</UseLocalKhaosTime>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -23,6 +24,18 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\Khaos.Metrics.Core\Khaos.Metrics.Core.csproj" />
 		<ProjectReference Include="..\..\src\Khaos.Metrics.AspNet\Khaos.Metrics.AspNet.csproj" />
-		<ProjectReference Include="..\..\..\src\Khaos.Time\Khaos.Time.csproj" />
 	</ItemGroup>
+
+	<Choose>
+		<When Condition="'$(UseLocalKhaosTime)' == 'true'">
+			<ItemGroup>
+				<ProjectReference Include="..\..\..\Khaos.Time\src\Khaos.Time\Khaos.Time.csproj" />
+			</ItemGroup>
+		</When>
+		<Otherwise>
+			<ItemGroup>
+				<PackageReference Include="KhaosCode.Time" Version="$(KhaosTimePackageVersion)" />
+			</ItemGroup>
+		</Otherwise>
+	</Choose>
 </Project>
