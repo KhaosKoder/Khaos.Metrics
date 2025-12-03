@@ -1,6 +1,7 @@
 using System;
 using BenchmarkDotNet.Attributes;
 using Khaos.Metrics;
+using Khaos.Time;
 using Microsoft.Extensions.Options;
 
 namespace Khaos.Metrics.Benchmarks;
@@ -80,6 +81,8 @@ public class OperationMonitorBenchmarks : IDisposable
 		private long _ticks;
 
 		public DateTimeOffset Now => DateTimeOffset.UtcNow;
+
+		public DateTimeOffset UtcNow => DateTimeOffset.UtcNow;
 
 		public long TimestampTicks => _ticks;
 

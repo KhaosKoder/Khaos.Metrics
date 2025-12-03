@@ -5,9 +5,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>true</IsPackable>
-    <PackageId>Khaos.Metrics.Core</PackageId>
+    <PackageId>KhaosCode.Metrics</PackageId>
     <Description>Bounded in-memory monitoring engine with sampling, CPU measurement, and DI support.</Description>
     <PackageTags>monitoring;metrics;observability;dotnet</PackageTags>
+    <UseLocalKhaosTime Condition="'$(UseLocalKhaosTime)' == ''">true</UseLocalKhaosTime>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,8 +16,17 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Khaos.Time\Khaos.Time.csproj" />
-  </ItemGroup>
+  <Choose>
+    <When Condition="'$(UseLocalKhaosTime)' == 'true'">
+      <ItemGroup>
+        <ProjectReference Include="..\..\..\Khaos.Time\src\Khaos.Time\Khaos.Time.csproj" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <PackageReference Include="KhaosCode.Time" Version="$(KhaosTimePackageVersion)" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
 
 </Project>

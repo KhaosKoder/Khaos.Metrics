@@ -2,7 +2,7 @@
 
 ## Overview
 
-Khaos.Metrics uses [Semantic Versioning 2.0.0](https://semver.org/) with Git tags as the single source of truth. We do not hard-code version numbers in project files. Instead, [MinVer](https://github.com/adamralph/minver) reads the latest Git tag that matches our product prefix and automatically sets the `Version`, `PackageVersion`, `AssemblyVersion`, and `FileVersion` for every packable project in this solution. Both `Khaos.Metrics.Core` and `Khaos.Metrics.AspNet` always share the exact same version for a given commit.
+Khaos.Metrics uses [Semantic Versioning 2.0.0](https://semver.org/) with Git tags as the single source of truth. We do not hard-code version numbers in project files. Instead, [MinVer](https://github.com/adamralph/minver) reads the latest Git tag that matches our product prefix and automatically sets the `Version`, `PackageVersion`, `AssemblyVersion`, and `FileVersion` for the packable `Khaos.Metrics.Core` project, which produces the NuGet package `KhaosCode.Metrics`.
 
 MinVer is configured via `Directory.Build.props` to look for tags that start with `Khaos.Metrics/v`. When you run any build (`dotnet build`, `dotnet pack`, etc.), MinVer determines the version that should be applied.
 
@@ -28,14 +28,14 @@ Follow these steps to cut an official release:
 	git push origin Khaos.Metrics/v1.2.0
 	```
 
-5. Build packages:
+5. Build the package:
 
 	```bash
 	dotnet pack -c Release
 	```
 
-6. Verify the generated `.nupkg` files under `*/bin/Release` all share the new version (`1.2.0`).
-7. Publish the packages with `dotnet nuget push` or your preferred CI workflow (documented separately).
+6. Verify the generated `.nupkg` file under `*/bin/Release` uses the new version (`1.2.0`).
+7. Publish the package with `dotnet nuget push` or your preferred CI workflow (documented separately).
 
 ## Pre-release and Development Builds
 
@@ -74,4 +74,4 @@ Tag again with the correct number.
 
 ## Relation to Other Libraries
 
-Khaos.Metrics is part of a broader ecosystem of Khaos libraries, but each repository maintains its own independent versioning stream. Downstream bundles can depend on specific ranges (for example `Khaos.Metrics.Core [1.2.0,2.0.0)`) without impacting how this repo tags releases. When coordinating multi-repo releases, tag and publish each solution separately following this guide.
+Khaos.Metrics is part of a broader ecosystem of Khaos libraries, but each repository maintains its own independent versioning stream. Downstream bundles can depend on specific ranges (for example `KhaosCode.Metrics [1.2.0,2.0.0)`) without impacting how this repo tags releases. When coordinating multi-repo releases, tag and publish each solution separately following this guide.
