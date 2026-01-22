@@ -2,7 +2,8 @@
 
 	<PropertyGroup>
 		<Company>Khaos</Company>
-		<Authors>Khaos Team</Authors>
+		<Authors>Khaos</Authors>
+		<PackageOutputPath>$(MSBuildThisFileDirectory)artifacts\</PackageOutputPath>
 		<RepositoryUrl>https://github.com/your-org/Khaos.Metrics</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageProjectUrl>https://github.com/your-org/Khaos.Metrics</PackageProjectUrl>
