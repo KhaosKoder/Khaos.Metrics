@@ -34,7 +34,7 @@
 		</When>
 		<Otherwise>
 			<ItemGroup>
-				<PackageReference Include="KhaosCode.Time" Version="$(KhaosTimePackageVersion)" />
+				<PackageReference Include="KhaosKode.Time" Version="$(KhaosTimePackageVersion)" />
 			</ItemGroup>
 		</Otherwise>
 	</Choose>

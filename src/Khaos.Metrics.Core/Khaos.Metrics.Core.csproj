@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>true</IsPackable>
-    <PackageId>KhaosCode.Metrics</PackageId>
+    <PackageId>KhaosKode.Metrics</PackageId>
     <Description>Bounded in-memory monitoring engine with sampling, CPU measurement, and DI support.</Description>
     <PackageTags>monitoring;metrics;observability;dotnet</PackageTags>
     <UseLocalKhaosTime Condition="'$(UseLocalKhaosTime)' == ''">true</UseLocalKhaosTime>
@@ -24,7 +24,7 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <PackageReference Include="KhaosCode.Time" Version="$(KhaosTimePackageVersion)" />
+        <PackageReference Include="KhaosKode.Time" Version="$(KhaosTimePackageVersion)" />
       </ItemGroup>
     </Otherwise>
   </Choose>
